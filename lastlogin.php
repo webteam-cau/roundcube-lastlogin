@@ -340,7 +340,7 @@ class lastlogin extends rcube_plugin
             'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4]
         );
 
-        foreach (['timestamp', 'ip', 'hostname', 'location', 'ua'] as $key) {
+        foreach (['timestamp', 'ip', 'hostname', 'locality', 'ua'] as $key) {
             $key = rcube::Q($this->gettext($key));
             $table->add_header(['title' => $key], $key);
         }
