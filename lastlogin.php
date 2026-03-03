@@ -40,7 +40,6 @@ class lastlogin extends rcube_plugin
      */
     public function init()
     {
-        $this->load_config('config.inc.php.dist');
         $this->load_config();
         $this->add_texts('localization/');
         $this->rc = rcmail::get_instance();
