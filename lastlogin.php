@@ -335,12 +335,21 @@ class lastlogin extends rcube_plugin
      */
     public function recentlogins()
     {
+        $columns = array('timestamp', 'ip');
+        if ($this->rc->config->get('lastlogin_dns', false)){
+            $columns[] = 'hostname';
+        }
+        $columns[] = 'locality';
+        if ($this->rc->config->get('lastlogin_useragent', false)){
+            $columns[] = 'ua';
+        }
+        
         $table = new html_table(
-            ['cols'=>5, 'class'=>'uibox records-table',
+            ['cols'=>count($columns), 'class'=>'uibox records-table',
             'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4]
         );
 
-        foreach (['timestamp', 'ip', 'hostname', 'locality', 'ua'] as $key) {
+        foreach ($columns /*['timestamp', 'ip', 'hostname', 'locality', 'ua']*/ as $key) {
             $key = rcube::Q($this->gettext($key));
             $table->add_header(['title' => $key], $key);
         }
@@ -359,9 +368,13 @@ class lastlogin extends rcube_plugin
             );
             $table->add([], rcube::Q($date));
             $table->add([], rcube::Q($from));
-            $table->add([], rcube::Q($dns));
+            if ($this->rc->config->get('lastlogin_dns', false)){
+                $table->add([], rcube::Q($dns));
+            }
             $table->add([], rcube::Q($geo));
-            $table->add(['title' => rcube::Q($ua)], rcube::Q($ua));
+            if ($this->rc->config->get('lastlogin_useragent', false)){
+                $table->add(['title' => rcube::Q($ua)], rcube::Q($ua));
+            }
         }
 
         return $table->show();
