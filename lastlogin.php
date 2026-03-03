@@ -269,7 +269,6 @@ class lastlogin extends rcube_plugin
             '',
             html::tag('legend', null, $this->gettext('recentactivity'))
             . $this->recentlogins()
-            . html::tag('p', 'license', $this->gettext('geoip_license'))
         );
 
         return html::div(
