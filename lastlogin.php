@@ -177,6 +177,14 @@ class lastlogin extends rcube_plugin
 
         if ($ret) {
             $args['abort'] = false;
+
+            $this->rc->db->query(
+                "DELETE FROM " . $this->table_name()
+                    . " WHERE username=? AND id < "
+                    . "   (SELECT id FROM " . $this->table_name() . " WHERE username=? ORDER BY id DESC "
+                    . "    LIMIT 1 OFFSET " . intval($this->rc->config->get('lastlogin_lastrecords', 5)) . ")",
+                $username, $username
+            );
         }
 
         return $args;
