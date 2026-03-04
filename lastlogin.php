@@ -159,16 +159,9 @@ class lastlogin extends rcube_plugin
         $tor = $this->is_tor($ip);
         $ua  = ($this->rc->config->get('lastlogin_useragent', false) ? $_SERVER['HTTP_USER_AGENT'] : '');
 
-        $sql =
-            "INSERT INTO " . $this->table_name()
-            . "(user_id, username, sess_id, ip, real_ip, hostname, geoloc, ua".($tor ? ", tor" : "").")"
-            . " VALUES (?, ?, ?, ?, ?, ?, ?, ?".($tor ? ", TRUE" : "").");"
-            .
-            "SELECT @first_id_to_keep := id FROM " . $this->table_name()
-            . " WHERE username=? ORDER BY timestamp DESC LIMIT 1 OFFSET ?;"
-            .
-            "DELETE FROM userlogins WHERE username=? AND id < @first_id_to_keep;"
-            ;
+        $sql = "INSERT INTO " . $this->table_name() .
+            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc, ua".($tor ? ", tor" : "").")".
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?".($tor ? ", TRUE" : "").")";
 
         $ret = $this->rc->db->query(
             $sql,
@@ -179,10 +172,7 @@ class lastlogin extends rcube_plugin
             $ips['forwarded_ip'],
             $dns,
             $geo,
-            $ua,
-            $user_id,
-            $this->rc->config->get('lastlogin_lastrecords', 20),
-            $user_id,
+            $ua
         );
 
         if ($ret) {
